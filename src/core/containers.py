@@ -1,6 +1,8 @@
+from src.core.ports.gateways.i_notification_sender_gateway import INotificationSenderGateway
 from dependency_injector import containers, providers
 
 from config.database import get_db
+from src.infrastructure.gateways.aws_notification_sender_gateway import AwsNotificationSenderGateway
 from src.core.shared.identity_map import IdentityMap
 from src.infrastructure.repositories.mongoengine.video_repository import VideoRepository
 from src.infrastructure.gateways.object_storage_gateway import ObjectStorageGateway
@@ -24,4 +26,8 @@ class Container(containers.DeclarativeContainer):
         VideoController,
         video_repository=video_gateway,
         storage_gateway=storage_gateway
+    )
+    
+    notification_sender_gateway: providers.Singleton[INotificationSenderGateway] = providers.Singleton(
+        AwsNotificationSenderGateway
     )
