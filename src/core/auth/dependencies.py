@@ -12,4 +12,7 @@ def get_current_user(security_scopes: SecurityScopes, token: str = Depends(oauth
         if scope not in permissions:
             raise ForbiddenException("Forbidden access")
 
-    return payload
+    return {
+        "person": payload.get("person"),
+        "profile": payload.get("profile")
+    }
