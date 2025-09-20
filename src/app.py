@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from config.custom_openapi import custom_openapi
-from src.presentation.api.v1.middleware.api_key_middleware import ApiKeyMiddleware
 from src.presentation.api.v1.middleware.identity_map_middleware import IdentityMapMiddleware
 from src.core.containers import Container
 from src.presentation.api.v1.middleware.auth_middleware import AuthMiddleware
@@ -32,9 +31,8 @@ app.container = container
 app.openapi = lambda: custom_openapi(app)
 
 app.add_middleware(CustomErrorMiddleware)
-#app.add_middleware(AuthMiddleware)
+app.add_middleware(AuthMiddleware)
 app.add_middleware(IdentityMapMiddleware)
-#app.add_middleware(ApiKeyMiddleware)
 
 PREFIX_API_V1 = "/api/v1"
 
