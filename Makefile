@@ -21,10 +21,8 @@ migrate_db:
 
 dev:
 	@echo "Starting MySQL container..."
-	@docker compose up -d --build order-microservice-db
+	@docker compose up -d --build main-api-db
 	@sleep 5
-	@echo "Applying migrations..."
-	@MYSQL_HOST=localhost ./config/init_db/init_db.sh
 	@echo "Starting Uvicorn..."
 	@trap 'docker compose down --remove-orphans' INT TERM EXIT; \
 	MYSQL_HOST=localhost uvicorn src.app:app --reload --host 0.0.0.0 --port 8000
