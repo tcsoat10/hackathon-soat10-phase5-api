@@ -65,11 +65,9 @@ class AuthMiddleware(BaseHTTPMiddleware):
             return JSONResponse(
                 status_code=status.HTTP_403_FORBIDDEN,
                 content={
-                    "error": {
-                        "code": ErrorCode.FORBIDDEN.value,
-                        "message": ErrorCode.FORBIDDEN.description,
-                        "details": e.detail.get('message', str(e)),
-                    }
+                    "code": ErrorCode.FORBIDDEN.value,
+                    "message": ErrorCode.FORBIDDEN.description,
+                    "details": str(e),
                 },
             )
 
