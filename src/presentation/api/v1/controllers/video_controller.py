@@ -8,9 +8,7 @@ class VideoController:
     def __init__(self, video_repository: IVideoRepository):
         self._video_repository = video_repository
 
-    async def upload_video(self, file, current_user = ''):
-        upload_video_use_case = UploadVideoUseCase.build(
-            video_repository=self._video_repository
-        )
-        uploaded_video = await upload_video_use_case.execute(file=file)
+    async def upload_video(self, file, current_user):
+        upload_video_use_case = UploadVideoUseCase.build(video_repository=self._video_repository)
+        uploaded_video = await upload_video_use_case.execute(file=file, current_user=current_user)
         return DTOPresenter.transform(uploaded_video, VideoDTO)

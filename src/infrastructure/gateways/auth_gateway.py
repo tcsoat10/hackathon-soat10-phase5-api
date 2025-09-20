@@ -28,7 +28,6 @@ class AuthGateway(IAuthGateway):
                 json=payload,
                 headers={"x-api-key": self.auth_service_x_api_key}
             )
-            breakpoint()
             response.raise_for_status()
             data = response.json()
             self.logger.info(f"Successfully signed up user")

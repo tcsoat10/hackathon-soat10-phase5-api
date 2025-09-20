@@ -1,6 +1,4 @@
-# video_routes.py
-from typing import List, Optional
-from fastapi import APIRouter, Depends, Query, Security, status, UploadFile, File
+from fastapi import APIRouter, Depends, Security, status, UploadFile, File
 from dependency_injector.wiring import inject, Provide
 
 from src.core.auth.dependencies import get_current_user
@@ -11,7 +9,6 @@ from src.core.containers import Container
 
 router = APIRouter()
 
-# Upload de vídeo
 @router.post(
     "/videos",
     response_model=VideoDTO,
@@ -21,13 +18,13 @@ router = APIRouter()
 @inject
 async def upload_video(
     file: UploadFile = File(..., description="Arquivo de vídeo para processamento"),
-    #current_user: dict = Depends(get_current_user),
+    current_user: dict = Depends(get_current_user),
     controller: VideoController = Depends(Provide[Container.video_controller]),
 ):
     """
     Faz upload de um vídeo para extração de frames
     """
-    return await controller.upload_video(file)
+    return await controller.upload_video(file, current_user=current_user)
 
 '''
 # Listar vídeos do usuário
