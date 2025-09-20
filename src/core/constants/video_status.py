@@ -8,7 +8,7 @@ class VideoStatusEnum(Enum):
     QUEUED_ZIP = ("Queued for ZIP Creation", "Queued for ZIP creation")
     PROCESSING_ZIP = ("Processing ZIP", "ZIP creation in progress")
     COMPLETED = ("Completed", "Processing completed")
-    ERROR= ("Error", "An error occurred during processing")
+    ERROR = ("Error", "An error occurred during processing")
     
 
     @property

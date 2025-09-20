@@ -12,4 +12,4 @@ class SendVideoToFrameExtractorUseCase:
         return cls(frame_extractor_gateway=frame_extractor_gateway)
 
     def execute(self, video_dto: RegisterVideoDTO):
-        return self.frame_extractor_gateway.send_video_to_frame_extractor(video_dto)
+        return self._frame_extractor_gateway.send_video_to_frame_extractor(video_dto)

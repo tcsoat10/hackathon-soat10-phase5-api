@@ -1,38 +1,89 @@
-from typing import Generator
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base, Session
+from ast import alias
+from mongoengine import connect, disconnect
 import os
 
-# Obter configurações do banco de dados diretamente das variáveis de ambiente
-DATABASE = {
-    "drivername": "mysql+pymysql",
-    "host": os.getenv("MYSQL_HOST", "localhost"),
-    "port": os.getenv("MYSQL_PORT", "3306"),
-    "user": os.getenv("MYSQL_USER", "user"),
-    "password": os.getenv("MYSQL_PASSWORD", "password"),
-    "name": os.getenv("MYSQL_DATABASE", "db_name"),
-}
+DELETE_MODE = os.getenv('DELETE_MODE', 'soft').lower()  # Default to 'soft' delete mode
 
-# Construir a URL do banco de dados
-DATABASE_URL = (
-    f"{DATABASE['drivername']}://{DATABASE['user']}:{DATABASE['password']}@"
-    f"{DATABASE['host']}:{DATABASE['port']}/{DATABASE['name']}"
-)
+class MongoDBConfig:
+    """MongoDB configuration class"""
+    
+    @staticmethod
+    def get_connection_string() -> str:
+        mongo_host = os.getenv('MONGO_HOST', 'localhost')
+        mongo_port = int(os.getenv('MONGO_PORT', 27017))
+        mongodb_name = os.getenv('MONGO_DB', 'main_api-mongodb')
+        mongo_user = os.getenv('MONGO_USER', '')
+        mongo_password = os.getenv('MONGO_PASSWORD', '')
+        auth_source = os.getenv('AUTH_SOURCE', 'admin')
+        
+        if mongo_user and mongo_password:
+            connection_string = f"mongodb://{mongo_user}:{mongo_password}@{mongo_host}:{mongo_port}/{mongodb_name}?authSource={auth_source}"
+        else:
+            connection_string = f"mongodb://{mongo_host}:{mongo_port}"
+        #breakpoint()
+        return connection_string
+    
+    @staticmethod
+    def connect_to_database(alias='default'):
 
-DELETE_MODE = os.getenv("DELETE_MODE", "soft")
+        """Connect to MongoDB"""
+        try:            
+            # Disconnect existing connection if any
+            try:
+                disconnect(alias=alias)
+            except:
+                pass
 
-# Criar o motor do SQLAlchemy
-engine = create_engine(DATABASE_URL, echo=True, pool_pre_ping=True, pool_recycle=3600)
+            
+            print("Connecting to MongoDB database...")
+            print(f"Using alias: {alias}")
+            # print(f"Connection string: {MongoDBConfig.get_connection_string()}")
 
-# Configurar a sessão
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+            
+            connection_string = MongoDBConfig.get_connection_string()
+            mongo_db = os.getenv('MONGO_DB', 'main_api-mongodb')
 
-# Classe base para os modelos
-Base = declarative_base()
+            connect(
+                db=mongo_db,
+                host=connection_string,
+                alias=alias,
+                authentication_source='admin'
+            )
+            print(f"Connected to MongoDB: {mongo_db} with alias: {alias}")
+        except Exception as e:
+            print(f"Error connecting to MongoDB: {e}")
+            raise
+    
+    @staticmethod
+    def disconnect_from_database(alias='default'):
+        """Disconnect from MongoDB"""
+        try:
+            disconnect(alias=alias)
+            print(f"Disconnected from MongoDB (alias: {alias})")
+        except Exception as e:
+            print(f"Error disconnecting from MongoDB: {e}")
 
-def get_db() -> Generator[Session, None, None]:
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+def connect_db(alias='default'):
+    """Connect to MongoDB database"""
+    
+    print("Connecting to MongoDB database...")
+    print(f"Using alias: {alias}")
+    # print(f"Connection string: {MongoDBConfig.get_connection_string()}")
+    
+    MongoDBConfig.connect_to_database(alias=alias)
+
+
+def disconnect_db(alias='default'):
+    """Disconnect from MongoDB database"""
+    MongoDBConfig.disconnect_from_database(alias=alias)
+
+
+def get_db():
+    """
+    Get MongoDB connection for MongoEngine models
+    """
+    from mongoengine import get_db as mongoengine_get_db
+    
+    return mongoengine_get_db()
+
+__all__ = ['MongoDBConfig', 'connect_db', 'disconnect_db', 'get_db']

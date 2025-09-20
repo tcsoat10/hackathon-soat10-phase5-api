@@ -16,18 +16,18 @@ router = APIRouter()
     "/videos",
     response_model=VideoDTO,
     status_code=status.HTTP_201_CREATED,
-    dependencies=[Security(get_current_user)],
+    #dependencies=[Security(get_current_user)],
 )
 @inject
 async def upload_video(
     file: UploadFile = File(..., description="Arquivo de vídeo para processamento"),
-    current_user: dict = Depends(get_current_user),
+    #current_user: dict = Depends(get_current_user),
     controller: VideoController = Depends(Provide[Container.video_controller]),
 ):
     """
     Faz upload de um vídeo para extração de frames
     """
-    return await controller.upload_video(file, current_user)
+    return await controller.upload_video(file)
 
 '''
 # Listar vídeos do usuário

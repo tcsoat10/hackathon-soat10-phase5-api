@@ -25,10 +25,8 @@ COPY . .
 
 RUN rm -rf /app/.venv
 
-RUN chmod +x /app/config/init_db/init_db.sh
-
 ARG PORT=8000
 ENV PORT=${PORT}
 EXPOSE ${PORT}
 
-CMD ["sh", "-c", "./config/init_db/init_db.sh && poetry run uvicorn src.app:app --host 0.0.0.0 --port $PORT"]
+CMD ["sh", "-c", "poetry run uvicorn src.app:app --host 0.0.0.0 --port $PORT"]

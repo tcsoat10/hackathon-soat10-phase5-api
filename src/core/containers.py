@@ -2,10 +2,9 @@ from src.core.ports.gateways.i_notification_sender_gateway import INotificationS
 from dependency_injector import containers, providers
 
 from config.database import get_db
-from src.infrastructure.gateways.aws_notification_sender_gateway import AwsNotificationSenderGateway
+from src.infrastructure.gateways.notification_sender_gateway import NotificationSenderGateway
 from src.core.shared.identity_map import IdentityMap
-from src.infrastructure.repositories.mongoengine.video_repository import VideoRepository
-from src.infrastructure.gateways.object_storage_gateway import ObjectStorageGateway
+from src.infrastructure.repositories.mongoengine.video_repository import MongoVideoRepository
 from src.presentation.api.v1.controllers.video_controller import VideoController
 
 class Container(containers.DeclarativeContainer):
@@ -19,15 +18,13 @@ class Container(containers.DeclarativeContainer):
 
     db_session = providers.Resource(get_db)
 
-    storage_gateway = providers.Singleton(ObjectStorageGateway)
-    video_gateway = providers.Factory(VideoRepository, db_session=db_session, identity_map=identity_map)
+    video_gateway = providers.Factory(MongoVideoRepository)
 
     video_controller = providers.Factory(
         VideoController,
-        video_repository=video_gateway,
-        storage_gateway=storage_gateway
+        video_repository=video_gateway        
     )
     
     notification_sender_gateway: providers.Singleton[INotificationSenderGateway] = providers.Singleton(
-        AwsNotificationSenderGateway
+        NotificationSenderGateway
     )

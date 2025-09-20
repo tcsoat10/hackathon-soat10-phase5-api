@@ -9,7 +9,7 @@ class MongoVideoRepository(IVideoRepository):
     def save(self, video: Video) -> Video:
         """Salva ou atualiza um Video."""
         if not video.id:
-            video.id = str(uuid4())
+            #video.id = str(uuid4())
             model = VideoModel.from_entity(video)
         else:
             model = VideoModel.objects(id=video.id).first()
@@ -23,6 +23,7 @@ class MongoVideoRepository(IVideoRepository):
             model.updated_at = video.updated_at
 
         model.save()
+        model.reload()
 
         return model.to_entity()
     

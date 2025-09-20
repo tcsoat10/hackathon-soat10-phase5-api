@@ -2,7 +2,6 @@ from pydantic import BaseModel, Field, ConfigDict
 from fastapi import UploadFile
 from typing import Optional
 
-from src.core.domain.dtos.video_frame_extractor.register_video_config_dto import RegisterVideoConfigDTO
 
 class RegisterVideoDTO(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True)
