@@ -20,7 +20,7 @@ class MongoDBConfig:
             connection_string = f"mongodb://{mongo_user}:{mongo_password}@{mongo_host}:{mongo_port}/{mongodb_name}?authSource={auth_source}"
         else:
             connection_string = f"mongodb://{mongo_host}:{mongo_port}"
-        #breakpoint()
+
         return connection_string
     
     @staticmethod

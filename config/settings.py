@@ -35,3 +35,6 @@ EMAIL_USE_TLS=os.getenv('EMAIL_USE_TLS', 'true').lower() in ('true', '1')
 EMAIL_USE_SSL=os.getenv('EMAIL_USE_SSL', 'false').lower() in ('true', '1')
 
 FRAME_EXTRACTOR_SERVICE_URL = os.getenv('FRAME_EXTRACTOR_SERVICE_URL')
+
+AUTH_SERVICE_URL=os.getenv('AUTH_SERVICE_URL')
+AUTH_SERVICE_X_API_KEY=os.getenv('AUTH_SERVICE_X_API_KEY')

@@ -1,12 +1,12 @@
 from fastapi import FastAPI
 from config.custom_openapi import custom_openapi
-from src.presentation.api.v1.middleware.api_key_middleware import ApiKeyMiddleware
 from src.presentation.api.v1.middleware.identity_map_middleware import IdentityMapMiddleware
 from src.core.containers import Container
 from src.presentation.api.v1.middleware.auth_middleware import AuthMiddleware
 from src.presentation.api.v1.middleware.custom_error_middleware import CustomErrorMiddleware
 from src.presentation.api.v1.routes.health_check import router as health_check_router
 from src.presentation.api.v1.routes.video_routes import router as video_router
+from src.presentation.api.v1.routes.auth_routes import router as auth_router
 from contextlib import asynccontextmanager
 from config.database import connect_db, disconnect_db
 
@@ -32,12 +32,12 @@ app.container = container
 app.openapi = lambda: custom_openapi(app)
 
 app.add_middleware(CustomErrorMiddleware)
-#app.add_middleware(AuthMiddleware)
+app.add_middleware(AuthMiddleware)
 app.add_middleware(IdentityMapMiddleware)
-#app.add_middleware(ApiKeyMiddleware)
 
 PREFIX_API_V1 = "/api/v1"
 
 # Adicionando rotas da versão 1
 app.include_router(health_check_router, prefix=PREFIX_API_V1)
 app.include_router(video_router, prefix=PREFIX_API_V1)
+app.include_router(auth_router, prefix=PREFIX_API_V1)
