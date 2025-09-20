@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Query, Security, status, UploadFile, Fil
 from dependency_injector.wiring import inject, Provide
 
 from src.core.auth.dependencies import get_current_user
-from src.core.constants.video_status import VideoStatusEnum
+from src.core.constants.permissions import VideoPermissions
 from src.presentation.api.v1.controllers.video_controller import VideoController
 from src.core.domain.dtos.video_dto import VideoDTO
 from src.core.containers import Container
@@ -16,7 +16,7 @@ router = APIRouter()
     "/videos",
     response_model=VideoDTO,
     status_code=status.HTTP_201_CREATED,
-    #dependencies=[Security(get_current_user)],
+    dependencies=[Security(get_current_user, scopes=[VideoPermissions.CAN_SEND_VIDEO])],
 )
 @inject
 async def upload_video(
