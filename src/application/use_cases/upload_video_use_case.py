@@ -35,7 +35,7 @@ class UploadVideoUseCase:
         video_response = send_to_frame_extraction_use_case.execute(video_dto=register_video_dto)
         video = Video(
             client_identification=register_video_dto.client_identification,
-            status=VideoStatusEnum.PENDING_FRAMES.status,
+            status=VideoStatusEnum.QUEUED_FRAMES.status,
             job_ref=video_response['job_ref']
         )
         video = self.video_repository.save(video)
