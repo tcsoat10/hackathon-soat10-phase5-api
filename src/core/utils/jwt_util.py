@@ -1,4 +1,5 @@
 from jose import jwt
+from jose.exceptions import ExpiredSignatureError, JWTError
 from datetime import datetime, timedelta, timezone
 from config.settings import ACCESS_TOKEN_EXPIRE_MINUTES, JWT_SECRET_KEY, JWT_ALGORITHM
 from src.core.exceptions.invalid_token_exception import InvalidTokenException
@@ -20,7 +21,7 @@ class JWTUtil:
             if not payload:
                 raise InvalidTokenException(message="Invalid token payload")
             return payload
-        except jwt.ExpiredSignatureError:
+        except ExpiredSignatureError:
                 raise InvalidTokenException(message="Token has expired.")
-        except jwt.InvalidTokenError:
+        except JWTError:
                 raise InvalidTokenException(message="Invalid token.")
