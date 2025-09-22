@@ -1,23 +1,26 @@
 from enum import Enum
 
 class VideoStatusEnum(Enum):
-    PENDING_FRAMES = ("Pending Frames", "Awaiting processing")
-    QUEUED_FRAMES = ("Queued for Frame Extraction", "Queued for frame extraction")
-    PROCESSING_FRAMES = ("Processing Frames", "Frame extraction in progress")
-    PENDING_ZIP = ("Pending ZIP", "Awaiting ZIP creation")
-    QUEUED_ZIP = ("Queued for ZIP Creation", "Queued for ZIP creation")
-    PROCESSING_ZIP = ("Processing ZIP", "ZIP creation in progress")
-    COMPLETED = ("Completed", "Processing completed")
-    ERROR = ("Error", "An error occurred during processing")
-    
+    PENDING_FRAMES = (0, "Pending Frames", "Awaiting processing")
+    QUEUED_FRAMES = (1, "Queued for Frame Extraction", "Queued for frame extraction")
+    PROCESSING_FRAMES = (2, "Processing Frames", "Frame extraction in progress")
+    PENDING_ZIP = (3, "Pending ZIP", "Awaiting ZIP creation")
+    QUEUED_ZIP = (4, "Queued for ZIP Creation", "Queued for ZIP creation")
+    PROCESSING_ZIP = (5, "Processing ZIP", "ZIP creation in progress")
+    COMPLETED = (6, "Completed", "Processing completed")
+    ERROR = (7, "Error", "An error occurred during processing")
 
     @property
-    def status(self):
+    def order(self):
         return self.value[0]
 
     @property
-    def description(self):
+    def status(self):
         return self.value[1]
+
+    @property
+    def description(self):
+        return self.value[2]
 
     @classmethod
     def status_and_descriptions(cls):
@@ -39,10 +42,23 @@ class VideoStatusEnum(Enum):
         """
         return {member.status: member.description for member in cls}
     
+    @classmethod
+    def get_by_status(cls, status: str):
+        """
+        Retorna o membro do enum correspondente ao status fornecido.
+        :param status: O status a ser procurado.
+        :return: O membro do enum VideoStatusEnum.
+        :raises ValueError: Se nenhum status correspondente for encontrado.
+        """
+        for member in cls:
+            if member.status == status:
+                return member
+        raise ValueError(f"No matching status for '{status}'")
+    
     def __str__(self) -> str:
         return self.status.upper()
     
     def __repr__(self) -> str:
         return self.status
     
-__all__ = ['VideoStatus']
+__all__ = ['VideoStatusEnum']

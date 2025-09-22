@@ -9,7 +9,6 @@ class MongoVideoRepository(IVideoRepository):
     def save(self, video: Video) -> Video:
         """Salva ou atualiza um Video."""
         if not video.id:
-            #video.id = str(uuid4())
             model = VideoModel.from_entity(video)
         else:
             model = VideoModel.objects(id=video.id).first()
@@ -17,9 +16,6 @@ class MongoVideoRepository(IVideoRepository):
                 raise ValueError(f"Video com ID {video.id} não encontrado para atualização.")
 
             model.status = video.status
-            model.bucket = video.bucket
-            model.frames_path = video.frames_path
-            model.notification_url = video.notification_url
             model.updated_at = video.updated_at
 
         model.save()
@@ -27,4 +23,10 @@ class MongoVideoRepository(IVideoRepository):
 
         return model.to_entity()
     
-__all__ = ["MongoZipJobRepository"]
+    def find_by_job_ref(self, job_ref: str) -> Optional[Video]:
+        """Encontra um Video pelo job_ref."""
+        model: VideoModel = VideoModel.objects(job_ref=job_ref).first()
+        return model.to_entity() if model else None
+
+
+__all__ = ["MongoVideoRepository"]

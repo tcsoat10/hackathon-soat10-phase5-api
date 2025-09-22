@@ -14,6 +14,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
             "/redoc",
             "/api/v1/auth/signin",
             "/api/v1/auth/signup",
+            "/api/v1/notification",
             "/api/v1/health",
         ]
 

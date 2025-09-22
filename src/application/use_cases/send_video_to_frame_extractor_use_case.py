@@ -1,6 +1,5 @@
 from src.core.ports.gateways.i_frame_extractor_gateway import IFrameExtractorGateway
 from src.core.domain.dtos.register_video_dto import RegisterVideoDTO
-from fastapi import UploadFile
 
 
 class SendVideoToFrameExtractorUseCase:

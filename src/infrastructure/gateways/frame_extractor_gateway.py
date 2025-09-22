@@ -1,7 +1,7 @@
 import requests
 import logging
 from src.core.ports.gateways.i_frame_extractor_gateway import IFrameExtractorGateway
-from src.config.settings import FRAME_EXTRACTOR_SERVICE_URL, FRAME_EXTRACTOR_SERVICE_X_API_KEY
+from config.settings import FRAME_EXTRACTOR_SERVICE_URL, FRAME_EXTRACTOR_SERVICE_X_API_KEY
 from src.core.domain.dtos.register_video_dto import RegisterVideoDTO
 
 class FrameExtractorGateway(IFrameExtractorGateway):
@@ -25,6 +25,8 @@ class FrameExtractorGateway(IFrameExtractorGateway):
                 files=video_dict,
                 headers={"x-api-key": self.frame_extractor_service_x_api_key}
             )
+            
+            print(f"Response: {response.text}")
             
             response.raise_for_status()
             data = response.json()

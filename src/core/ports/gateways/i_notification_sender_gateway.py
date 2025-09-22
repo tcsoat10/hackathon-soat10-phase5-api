@@ -10,7 +10,7 @@ class INotificationSenderGateway(ABC):
         pass
 
     @abstractmethod
-    def send_email(self, recipient_email: str, subject: str, body: str):
+    def send_email(self, recipient_email: str, subject: str, data: dict):
         """
         Envia um e-mail para o endereço de e-mail especificado.
         """
