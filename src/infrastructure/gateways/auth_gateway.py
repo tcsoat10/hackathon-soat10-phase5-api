@@ -58,6 +58,11 @@ class AuthGateway(IAuthGateway):
             return data
         except requests.exceptions.RequestException as e:
             self.logger.error(f"Error signing in user: {e}")
+            response_data = e.response.json()
+            self.logger.error(f"Response data: {response_data}")
+            if message := response_data.get('detail', {}).get('message'):
+                raise ValueError(message)
+
             raise
 
     def _validate_environment(self):

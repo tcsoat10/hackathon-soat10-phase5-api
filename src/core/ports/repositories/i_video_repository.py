@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional, List
+from typing import Optional
 from src.core.domain.entities.video import Video
 
 class IVideoRepository(ABC):
@@ -7,6 +7,10 @@ class IVideoRepository(ABC):
     def save(self, video: Video) -> Video:
         pass
     
+    @abstractmethod
+    def find_by_job_ref(self, job_ref: str) -> Optional[Video]:
+        pass
+
     '''
     @abstractmethod
     def get_by_id(self, id: str) -> Optional[Video]:

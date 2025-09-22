@@ -35,8 +35,10 @@ EMAIL_USE_TLS=os.getenv('EMAIL_USE_TLS', 'true').lower() in ('true', '1')
 EMAIL_USE_SSL=os.getenv('EMAIL_USE_SSL', 'false').lower() in ('true', '1')
 
 FRAME_EXTRACTOR_SERVICE_URL = os.getenv('FRAME_EXTRACTOR_SERVICE_URL')
+FRAME_EXTRACTOR_SERVICE_X_API_KEY = os.getenv('FRAME_EXTRACTOR_SERVICE_X_API_KEY')
 
 AUTH_SERVICE_URL=os.getenv('AUTH_SERVICE_URL')
 AUTH_SERVICE_X_API_KEY=os.getenv('AUTH_SERVICE_X_API_KEY')
 
-CALLBACK_URL = os.getenv('CALLBACK_URL', 'http://localhost:8000/api/v1/notify')
+CALLBACK_URL = os.getenv('CALLBACK_URL', 'http://localhost:8000/api/v1/notification')
+API_X_API_KEY = os.getenv('API_X_API_KEY')

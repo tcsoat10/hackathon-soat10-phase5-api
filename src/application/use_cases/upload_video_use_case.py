@@ -3,12 +3,11 @@ from fastapi import UploadFile
 
 from src.core.domain.entities.video import Video
 from src.core.ports.repositories.i_video_repository import IVideoRepository
-from src.core.domain.dtos.video_dto import VideoDTO
 from src.core.constants.video_status import VideoStatusEnum
 from src.application.use_cases.send_video_to_frame_extractor_use_case import SendVideoToFrameExtractorUseCase
 from src.core.domain.dtos.register_video_dto import RegisterVideoDTO
 from src.infrastructure.gateways.frame_extractor_gateway import FrameExtractorGateway
-from config.settings import CALLBACK_URL
+from config.settings import CALLBACK_URL, API_X_API_KEY
 
 
 class UploadVideoUseCase:
@@ -17,13 +16,13 @@ class UploadVideoUseCase:
         video_repository: IVideoRepository,        
     ):
         self.video_repository = video_repository
-        self.notify_url = CALLBACK_URL
+        self.notify_url = f"{CALLBACK_URL}?api_key={API_X_API_KEY}"
     
     @classmethod
     def build(cls, video_repository: IVideoRepository) -> "UploadVideoUseCase":
         return cls(video_repository=video_repository)
 
-    async def execute(self, file: UploadFile, current_user: dict[str, Any]) -> VideoDTO:
+    async def execute(self, file: UploadFile, current_user: dict[str, Any]) -> Video:
         register_video_dto = RegisterVideoDTO(
             video_file=file,
             client_identification=current_user['person']['username'],
@@ -36,7 +35,8 @@ class UploadVideoUseCase:
         video = Video(
             client_identification=register_video_dto.client_identification,
             status=VideoStatusEnum.QUEUED_FRAMES.status,
-            job_ref=video_response['job_ref']
+            job_ref=video_response['job_ref'],
+            email=current_user['person']['email']
         )
         video = self.video_repository.save(video)
-        return VideoDTO.from_entity(video)
+        return video

@@ -12,7 +12,8 @@ class VideoModel(BaseModel):
     job_ref = StringField(required=True, unique=True)
     client_identification = StringField(required=True)
     status = StringField(required=True, choices=VideoStatusEnum.method_list())
-    
+    email = StringField(required=False)
+
     @classmethod
     def from_entity(cls, video: Video) -> "VideoModel":
         return cls(
@@ -20,6 +21,10 @@ class VideoModel(BaseModel):
             status=video.status,
             job_ref=video.job_ref if video.job_ref else '',
             client_identification=video.client_identification,
+            email=video.email,
+            created_at=video.created_at,
+            updated_at=video.updated_at,
+            inactivated_at=video.inactivated_at
         )
 
     def to_entity(self) -> Video:
@@ -32,6 +37,11 @@ class VideoModel(BaseModel):
             id=str(self.id),
             job_ref=self.job_ref,
             client_identification=self.client_identification,
+            status=self.status,
+            email=self.email,
+            created_at=self.created_at,
+            updated_at=self.updated_at,
+            inactivated_at=self.inactivated_at
         )
 
         identity_map.add(video)

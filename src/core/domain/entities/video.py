@@ -1,24 +1,31 @@
 from datetime import datetime
-from typing import Dict, Optional, Any
+from typing import Optional
 
 from src.core.domain.entities.base_entity import BaseEntity
-from src.core.constants.video_status import VideoStatusEnum
 
 class Video(BaseEntity):
     """Entidade que representa um vídeo salvo no S3."""
 
     def __init__(
         self,        
-        client_identification: str,     
-        bucket: str,
-        video_path: str,
+        client_identification: str,
         job_ref: Optional[str] = None,
-        notification_url: Optional[str] = None,
+        status: Optional[str] = None,
+        email: Optional[str] = None,
+        created_at: Optional[datetime] = None,
+        updated_at: Optional[datetime] = None,
+        inactivated_at: Optional[datetime] = None,
+        id: Optional[str] = None,
     ):
-        self.client_identification = client_identification        
-        self.bucket = bucket        
-        self.video_path = video_path
+        super().__init__(
+            id=id,
+            created_at=created_at if created_at else datetime.now(),
+            updated_at=updated_at if updated_at else datetime.now(),
+            inactivated_at=inactivated_at
+        )
+        self.client_identification = client_identification
         self.job_ref = job_ref
-        self.notification_url = notification_url
+        self.status = status
+        self.email = email
 
 __all__ = ["Video"]
