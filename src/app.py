@@ -8,6 +8,7 @@ from src.presentation.api.v1.routes.health_check import router as health_check_r
 from src.presentation.api.v1.routes.video_routes import router as video_router
 from src.presentation.api.v1.routes.auth_routes import router as auth_router
 from src.presentation.api.v1.routes.notification_routes import router as notification_router
+from src.presentation.api.v1.routes.zip_routes import router as zip_router
 from contextlib import asynccontextmanager
 from config.database import connect_db, disconnect_db
 
@@ -43,3 +44,4 @@ app.include_router(health_check_router, prefix=PREFIX_API_V1)
 app.include_router(video_router, prefix=PREFIX_API_V1, tags=["video"])
 app.include_router(auth_router, prefix=PREFIX_API_V1, tags=["auth"])
 app.include_router(notification_router, prefix=PREFIX_API_V1, tags=["callbacks"])
+app.include_router(zip_router, prefix=PREFIX_API_V1, tags=["zip"])

@@ -10,6 +10,9 @@ from src.infrastructure.repositories.mongoengine.video_repository import MongoVi
 from src.presentation.api.v1.controllers.auth_controller import AuthController
 from src.presentation.api.v1.controllers.notification_controller import NotificationController
 from src.presentation.api.v1.controllers.video_controller import VideoController
+from src.core.ports.gateways.i_zip_gateway import IZipGateway
+from src.infrastructure.gateways.zip_gateway import ZipGateway
+from src.presentation.api.v1.controllers.zip_controller import ZipController
 
 class Container(containers.DeclarativeContainer):
 
@@ -21,6 +24,8 @@ class Container(containers.DeclarativeContainer):
         "src.presentation.api.v1.middleware.auth_middleware",
         "src.presentation.api.v1.controllers.notification_controller",
         "src.presentation.api.v1.routes.notification_routes",
+        "src.presentation.api.v1.routes.zip_routes",
+        "src.presentation.api.v1.controllers.zip_controller",
     ])
     
     identity_map = providers.Singleton(IdentityMap)
@@ -47,3 +52,8 @@ class Container(containers.DeclarativeContainer):
         notification_sender_gateway=notification_sender_gateway
     )
     
+    zip_gateway: providers.Factory[IZipGateway] = providers.Factory(ZipGateway)
+    zip_controller = providers.Factory(
+        ZipController,
+        zip_gateway=zip_gateway
+    )
