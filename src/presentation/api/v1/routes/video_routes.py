@@ -25,3 +25,19 @@ async def upload_video(
     Faz upload de um vídeo para extração de frames
     """
     return await controller.upload_video(file, current_user=current_user)
+
+@router.get(
+    "/videos",
+    response_model=list[VideoDTO],
+    status_code=status.HTTP_200_OK,
+    dependencies=[Security(get_current_user, scopes=[VideoPermissions.CAN_VIEW_VIDEO])],
+)
+@inject
+async def list_videos(
+    current_user: dict = Depends(get_current_user),
+    controller: VideoController = Depends(Provide[Container.video_controller]),
+):
+    """
+    Lista todos os vídeos enviados pelo usuário autenticado
+    """
+    return await controller.list_videos(current_user=current_user)

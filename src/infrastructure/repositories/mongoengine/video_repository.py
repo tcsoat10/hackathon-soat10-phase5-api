@@ -28,5 +28,9 @@ class MongoVideoRepository(IVideoRepository):
         model: VideoModel = VideoModel.objects(job_ref=job_ref).first()
         return model.to_entity() if model else None
 
+    def list_videos_by_user(self, client_identification: str) -> list[Video]:
+        """Lista todos os vídeos enviados por um usuário específico."""
+        models = VideoModel.objects(client_identification=client_identification)
+        return [model.to_entity() for model in models]
 
 __all__ = ["MongoVideoRepository"]
