@@ -1,9 +1,11 @@
 from src.core.ports.gateways.i_auth_gateway import IAuthGateway
+from src.core.ports.gateways.i_frame_extractor_gateway import IFrameExtractorGateway
 from src.core.ports.gateways.i_notification_sender_gateway import INotificationSenderGateway
 from dependency_injector import containers, providers
 
 from config.database import get_db
 from src.infrastructure.gateways.auth_gateway import AuthGateway
+from src.infrastructure.gateways.frame_extractor_gateway import FrameExtractorGateway
 from src.infrastructure.gateways.notification_sender_gateway import NotificationSenderGateway
 from src.core.shared.identity_map import IdentityMap
 from src.infrastructure.repositories.mongoengine.video_repository import MongoVideoRepository
@@ -33,10 +35,12 @@ class Container(containers.DeclarativeContainer):
     db_session = providers.Resource(get_db)
 
     video_gateway = providers.Factory(MongoVideoRepository)
+    frame_extractor_gateway: providers.Factory[IFrameExtractorGateway] = providers.Factory(FrameExtractorGateway)
 
     video_controller = providers.Factory(
         VideoController,
-        video_repository=video_gateway        
+        video_repository=video_gateway,
+        frame_extractor_gateway=frame_extractor_gateway
     )
     
     notification_sender_gateway: providers.Singleton[INotificationSenderGateway] = providers.Singleton(
