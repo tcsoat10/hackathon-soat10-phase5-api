@@ -35,6 +35,8 @@ class UploadVideoUseCase:
         video = Video(
             client_identification=register_video_dto.client_identification,
             status=VideoStatusEnum.QUEUED_FRAMES.status,
+            file_name=file.filename,
+            file_type=file.content_type,
             job_ref=video_response['job_ref'],
             email=current_user['person']['email']
         )

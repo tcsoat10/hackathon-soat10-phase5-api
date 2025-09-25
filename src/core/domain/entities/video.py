@@ -9,6 +9,8 @@ class Video(BaseEntity):
     def __init__(
         self,        
         client_identification: str,
+        file_name: str,
+        file_type: str,
         job_ref: Optional[str] = None,
         status: Optional[str] = None,
         email: Optional[str] = None,
@@ -27,5 +29,7 @@ class Video(BaseEntity):
         self.job_ref = job_ref
         self.status = status
         self.email = email
+        self.file_name = file_name
+        self.file_type = file_type
 
 __all__ = ["Video"]
