@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -10,6 +11,8 @@ class VideoDTO(BaseModel):
     status: str
     created_at: datetime
     updated_at: datetime
+    filename: Optional[str] = None
+    filetype: Optional[str] = None
 
     @classmethod
     def from_entity(cls, entity: Video) -> "VideoDTO":
@@ -18,6 +21,8 @@ class VideoDTO(BaseModel):
             job_ref=entity.job_ref,
             client_identification=entity.client_identification,
             status=entity.status,
+            filename=entity.file_name,
+            filetype=entity.file_type,
             created_at=entity.created_at,
             updated_at=entity.updated_at,
         )

@@ -13,6 +13,9 @@ class SignUpUseCase:
     def execute(self, sign_up_dto: SignUpDTO) -> dict:
         person_data = sign_up_dto.person.model_dump()
         user_data = sign_up_dto.user.model_dump()
+        
+        person_data['cpf'] = person_data['cpf'].replace('.', '').replace('-', '')
+        
         return self._auth_gateway.sign_up(person_data, user_data)
 
 __all__ = ["SignUpUseCase"]

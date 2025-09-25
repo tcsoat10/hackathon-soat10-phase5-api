@@ -31,6 +31,6 @@ class MongoVideoRepository(IVideoRepository):
     def list_videos_by_user(self, client_identification: str) -> list[Video]:
         """Lista todos os vídeos enviados por um usuário específico."""
         models = VideoModel.objects(client_identification=client_identification)
-        return [model.to_entity() for model in models]
+        return sorted([model.to_entity() for model in models], key=lambda x: x.created_at, reverse=True)
 
 __all__ = ["MongoVideoRepository"]

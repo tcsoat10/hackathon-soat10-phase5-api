@@ -60,7 +60,7 @@ class BasePermissionEnum(str, Enum):
 
 class VideoPermissions(BasePermissionEnum):
     CAN_SEND_VIDEO = ("can_send_video", "Permission to send a video")
-    CAN_VIEW_VIDEO = ("can_list_videos", "Permission to view videos")
+    CAN_VIEW_VIDEO = ("can_list_video", "Permission to view videos")
     CAN_DELETE_VIDEO = ("can_delete_video", "Permission to delete a video")
 
 class ZipPermissions(BasePermissionEnum):
