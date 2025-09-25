@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from config.custom_openapi import custom_openapi
+from src.presentation.api.v1.middleware.cors_middleware import CORSMiddleware
 from src.presentation.api.v1.middleware.identity_map_middleware import IdentityMapMiddleware
 from src.core.containers import Container
 from src.presentation.api.v1.middleware.auth_middleware import AuthMiddleware
@@ -33,6 +34,7 @@ app.container = container
 
 app.openapi = lambda: custom_openapi(app)
 
+app.add_middleware(CORSMiddleware)
 app.add_middleware(CustomErrorMiddleware)
 app.add_middleware(AuthMiddleware)
 app.add_middleware(IdentityMapMiddleware)
