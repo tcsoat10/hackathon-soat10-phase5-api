@@ -59,5 +59,6 @@ class Container(containers.DeclarativeContainer):
     zip_gateway: providers.Factory[IZipGateway] = providers.Factory(ZipGateway)
     zip_controller = providers.Factory(
         ZipController,
+        video_repository=video_gateway,
         zip_gateway=zip_gateway
     )
