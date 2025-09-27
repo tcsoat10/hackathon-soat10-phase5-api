@@ -73,7 +73,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-poetry-
 
-      - name: Run Tests in Parallel        
+      - name: Run Tests in Parallel
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}        
         run: |
           export ENV=test
           poetry run pytest --cov=src --numprocesses auto --dist loadfile --max-worker-restart 0
