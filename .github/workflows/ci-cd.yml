@@ -11,6 +11,7 @@ env:
   REGION_DEFAULT: "us-east-1"
   AWS_ECR_REGISTRY: "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com"
   PROJECT_NAME: "soattc-main-api"
+  CLUSTER_NAME: "hacka-soat10tc-cluster-eks"
 
 jobs:
   build:
@@ -280,3 +281,12 @@ jobs:
         working-directory: ./terraform/app
         if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
+      
+      - name: Force Kubernetes Rollout
+        if: github.ref == 'refs/heads/main'
+        run: |          
+          aws eks update-kubeconfig --region ${{ env.REGION_DEFAULT }} --name ${{ env.CLUSTER_NAME }}
+          
+          kubectl rollout restart deployment/soattc-main-api          
+          
+          kubectl rollout status deployment/soattc-main-api --timeout=300s
