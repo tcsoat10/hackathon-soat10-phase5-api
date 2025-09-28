@@ -93,7 +93,7 @@ resource "kubernetes_deployment" "main_api" {
           }
           env{
             name = "CALLBACK_URL"
-            value = var.callback_url
+            value = "http://${kubernetes_service.main_api_lb.status[0].load_balancer[0].ingress[0].hostname}/api/v1/notification"
           }
           env{
             name = "MONGO_HOST"
