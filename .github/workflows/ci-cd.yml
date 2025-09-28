@@ -12,7 +12,7 @@ env:
   AWS_ECR_REGISTRY: "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com"
   PROJECT_NAME: "soattc-main-api"
   CLUSTER_NAME: "hacka-soat10tc-cluster-eks"
-  DEPLOYMENT: main_api
+  DEPLOYMENT: main-api
 
 jobs:
   build:
