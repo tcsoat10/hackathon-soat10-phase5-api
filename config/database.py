@@ -11,13 +11,13 @@ class MongoDBConfig:
     def get_connection_string() -> str:
         mongo_host = os.getenv('MONGO_HOST', 'localhost')
         mongo_port = int(os.getenv('MONGO_PORT', 27017))
-        mongodb_name = os.getenv('MONGO_DB', 'main_api-mongodb')
+        mongodb_name = os.getenv('MONGO_DB', 'main-api-mongodb')
         mongo_user = os.getenv('MONGO_USER', '')
         mongo_password = os.getenv('MONGO_PASSWORD', '')
         auth_source = os.getenv('AUTH_SOURCE', 'admin')
         
         if mongo_user and mongo_password:
-            connection_string = f"mongodb://{mongo_user}:{mongo_password}@{mongo_host}:{mongo_port}/{mongodb_name}?authSource={auth_source}"
+            connection_string = f"mongodb://{mongo_user}:{mongo_password}@{mongo_host}:{mongo_port}/{mongodb_name}?authSource={auth_source}"            
         else:
             connection_string = f"mongodb://{mongo_host}:{mongo_port}"
 
@@ -41,13 +41,13 @@ class MongoDBConfig:
 
             
             connection_string = MongoDBConfig.get_connection_string()
-            mongo_db = os.getenv('MONGO_DB', 'main_api-mongodb')
+            mongo_db = os.getenv('MONGO_DB', 'main-api-mongodb')
 
             connect(
                 db=mongo_db,
                 host=connection_string,
                 alias=alias,
-                authentication_source='admin'
+                authentication_source=mongo_db
             )
             print(f"Connected to MongoDB: {mongo_db} with alias: {alias}")
         except Exception as e:
