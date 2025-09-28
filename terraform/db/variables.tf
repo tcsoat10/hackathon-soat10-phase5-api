@@ -11,5 +11,5 @@ variable "mongo_password" {}
 variable "mongo_root_password" {}
 
 variable "db_name" {
-  default = "api-database"
+  default = "main-api-db"
 }

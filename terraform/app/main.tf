@@ -180,7 +180,7 @@ resource "kubernetes_deployment" "main_api" {
             value = false
           }
           port {
-            container_port = 8002
+            container_port = 8000
           }
         }
       }
