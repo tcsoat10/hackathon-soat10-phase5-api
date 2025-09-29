@@ -30,6 +30,14 @@ class VideoModel(BaseModel):
             updated_at=video.updated_at,
             inactivated_at=video.inactivated_at
         )
+        
+    @classmethod
+    def from_mongo(cls, data: dict) -> "VideoModel":
+        if '_id' in data:
+            data['id'] = str(data['_id'])
+            del data['_id']
+
+        return cls(**data)
 
     def to_entity(self) -> Video:
         identity_map: IdentityMap = IdentityMap.get_instance()

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Any, Optional
+from src.core.domain.dtos.list_videos_in import ListVideosIn
 from src.core.domain.entities.video import Video
 
 class IVideoRepository(ABC):
@@ -12,7 +13,7 @@ class IVideoRepository(ABC):
         pass
     
     @abstractmethod
-    def list_videos_by_user(self, client_identification: str) -> list[Video]:
+    def list_videos_by_user(self, list_videos_in: ListVideosIn, client_identification: str) -> dict[str, Any]:
         pass
 
 

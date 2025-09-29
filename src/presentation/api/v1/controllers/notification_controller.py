@@ -1,4 +1,5 @@
 from src.core.domain.entities.video import Video
+from src.core.ports.gateways.i_zip_gateway import IZipGateway
 from src.core.ports.repositories.i_video_repository import IVideoRepository
 from src.core.ports.gateways.i_notification_sender_gateway import INotificationSenderGateway
 from src.core.domain.dtos.notification_dto import NotificationDTO
@@ -11,10 +12,12 @@ class NotificationController:
     def __init__(
         self,
         video_repository: IVideoRepository,
+        zip_gateway: IZipGateway,
         notification_sender_gateway: INotificationSenderGateway
     ):
         self._video_repository: IVideoRepository = video_repository
-        self._notification_sender_gateway = notification_sender_gateway
+        self._notification_sender_gateway: INotificationSenderGateway = notification_sender_gateway
+        self._zip_gateway: IZipGateway = zip_gateway
         self.logger = logging.getLogger(__name__)
 
     async def handle_notification(self, notification_dto: NotificationDTO):
@@ -48,10 +51,9 @@ class NotificationController:
             subject = "Seu vídeo foi processado com sucesso!" if is_completed else "Houve um erro no processamento do seu vídeo"
 
             if is_completed:
-                zip_url = getattr(notification_dto, "zip_url", None) or "N/A"
                 message = (
                     f"O processamento do seu vídeo (Job Ref: {video.job_ref}) foi concluído com sucesso. "
-                    f"Você pode baixar o arquivo ZIP aqui: {zip_url}"
+                    f"Acesse seu painel para baixar o arquivo ZIP."
                 )
             else:
                 detail = getattr(notification_dto, "detail", None) or "Sem detalhes disponíveis"

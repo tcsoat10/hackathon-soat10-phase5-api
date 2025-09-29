@@ -1,3 +1,6 @@
+from typing import Any
+from src.core.domain.dtos.list_videos_in import ListVideosIn
+from src.core.domain.dtos.list_videos_out import ListVideosOut
 from src.core.ports.gateways.i_frame_extractor_gateway import IFrameExtractorGateway
 from src.core.ports.repositories.i_video_repository import IVideoRepository
 from src.application.use_cases.upload_video_use_case import UploadVideoUseCase
@@ -19,7 +22,11 @@ class VideoController:
         uploaded_video = await upload_video_use_case.execute(file=file, current_user=current_user)
         return DTOPresenter.transform(uploaded_video, VideoDTO)
     
-    async def list_videos(self, current_user: dict):
+    async def list_videos(self, list_videos_in: ListVideosIn, current_user: dict):
         list_video_use_case = ListVideoUseCase.build(video_repository=self._video_repository)
-        videos = await list_video_use_case.list_videos(client_identification=current_user['person']['username'])
-        return [DTOPresenter.transform(video, VideoDTO) for video in videos]
+        list_videos_out: dict[str, Any] = await list_video_use_case.list_videos(list_videos_in=list_videos_in, client_identification=current_user['person']['username'])
+        list_videos_out['items'] = [DTOPresenter.transform(video, VideoDTO) for video in list_videos_out['items']]
+        return DTOPresenter.transform(list_videos_out, ListVideosOut)
+    
+__all__ = ["VideoController"]
+    
