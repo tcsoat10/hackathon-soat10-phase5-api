@@ -1,46 +1,44 @@
 import pytest
-
 from unittest.mock import Mock
-from src.application.use_cases.sign_in_use_case import SignInUseCase
-from src.core.ports.gateways.i_auth_gateway import IAuthGateway
+from src.application.use_cases.sign_up_use_case import SignUpUseCase
+from src.core.domain.dtos.singup_dto import SignUpDTO
+from src.core.domain.dtos.singup_dto import PersonDTO
+from src.core.domain.dtos.singup_dto import UserDTO
 
-class TestSignInUseCase:
-    
-    @pytest.fixture
-    def setup(self):
-        self._auth_gateway = Mock(spec=IAuthGateway)
-        self._sign_in_usecase = SignInUseCase.build(auth_gateway=self._auth_gateway)
-    
-    def test_execute_success(self, setup):
-        sign_in_dto = Mock()
-        sign_in_dto.username = "testuser"
-        sign_in_dto.password = "testpass"
-        
-        expected_response = {
-            "access_token": "someaccesstoken",
-            "token_type": "bearer",
-            "expires_in": 3600
-        }
-        
-        self._auth_gateway.sign_in.return_value = expected_response
-        
-        token_dto = self._sign_in_usecase.execute(sign_in_dto)
-        
-        self._auth_gateway.sign_in.assert_called_once_with("testuser", "testpass")
-        assert token_dto.access_token == expected_response["access_token"]
-        assert token_dto.token_type == expected_response["token_type"]
-        
-    def test_execute_failure(self, setup):
-        sign_in_dto = Mock()
-        sign_in_dto.username = "wronguser"
-        sign_in_dto.password = "wrongpass"
-        
-        self._auth_gateway.sign_in.side_effect = Exception("Invalid credentials")
-        
-        with pytest.raises(Exception) as exc_info:
-            self._sign_in_usecase.execute(sign_in_dto)
+@pytest.fixture
+def valid_signup_dto():
+    person = PersonDTO(name="João", cpf="123.456.789-00", email="joao@exemplo.com", birth_date="1990-01-01")
+    user = UserDTO(name="João", password="securepass")
+    return SignUpDTO(person=person, user=user)
 
-        self._auth_gateway.sign_in.assert_called_once_with("wronguser", "wrongpass")
-        assert str(exc_info.value) == "Invalid credentials"
+@pytest.fixture
+def mock_gateway():
+    gateway = Mock()
+    gateway.sign_up.return_value = {"status": "success", "job_id": "abc123"}
+    return gateway
 
-__all__ = ["TestSignInUseCase"]
+def test_build_method(mock_gateway):
+    usecase = SignUpUseCase.build(auth_gateway=mock_gateway)
+    assert isinstance(usecase, SignUpUseCase)
+
+def test_execute_success(valid_signup_dto, mock_gateway):
+    usecase = SignUpUseCase(mock_gateway)
+    result = usecase.execute(valid_signup_dto)
+
+    expected_person = {"name": "João", "cpf": "12345678900", "email":"joao@exemplo.com", "birth_date":"1990-01-01"}  # CPF sem pontuação
+    expected_user = {"name": "João", "password": "securepass"}
+
+    mock_gateway.sign_up.assert_called_once_with(expected_person, expected_user)
+    assert result["status"] == "success"
+    assert result["job_id"] == "abc123"
+
+def test_execute_gateway_failure(valid_signup_dto):
+    gateway = Mock()
+    gateway.sign_up.side_effect = Exception("Erro no serviço externo")
+
+    usecase = SignUpUseCase(gateway)
+
+    with pytest.raises(Exception) as exc_info:
+        usecase.execute(valid_signup_dto)
+
+    assert str(exc_info.value) == "Erro no serviço externo"
