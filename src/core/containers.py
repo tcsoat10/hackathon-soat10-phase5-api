@@ -50,15 +50,17 @@ class Container(containers.DeclarativeContainer):
     auth_gateway: providers.Factory[IAuthGateway] = providers.Factory(AuthGateway)
     auth_controller = providers.Factory(AuthController, auth_gateway=auth_gateway)
 
-    notification_controller = providers.Factory(
-        NotificationController,
-        video_repository=video_gateway,
-        notification_sender_gateway=notification_sender_gateway
-    )
     
     zip_gateway: providers.Factory[IZipGateway] = providers.Factory(ZipGateway)
     zip_controller = providers.Factory(
         ZipController,
         video_repository=video_gateway,
         zip_gateway=zip_gateway
+    )
+
+    notification_controller = providers.Factory(
+        NotificationController,
+        video_repository=video_gateway,
+        zip_gateway=zip_gateway,
+        notification_sender_gateway=notification_sender_gateway
     )

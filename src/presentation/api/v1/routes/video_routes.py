@@ -3,6 +3,8 @@ from dependency_injector.wiring import inject, Provide
 
 from src.core.auth.dependencies import get_current_user
 from src.core.constants.permissions import VideoPermissions
+from src.core.domain.dtos.list_videos_in import ListVideosIn
+from src.core.domain.dtos.list_videos_out import ListVideosOut
 from src.presentation.api.v1.controllers.video_controller import VideoController
 from src.core.domain.dtos.video_dto import VideoDTO
 from src.core.containers import Container
@@ -28,16 +30,17 @@ async def upload_video(
 
 @router.get(
     "/videos",
-    response_model=list[VideoDTO],
+    response_model=ListVideosOut,
     status_code=status.HTTP_200_OK,
     dependencies=[Security(get_current_user, scopes=[VideoPermissions.CAN_VIEW_VIDEO])],
 )
 @inject
 async def list_videos(
+    list_videos_in: ListVideosIn = Depends(),
     current_user: dict = Depends(get_current_user),
     controller: VideoController = Depends(Provide[Container.video_controller]),
 ):
     """
     Lista todos os vídeos enviados pelo usuário autenticado
     """
-    return await controller.list_videos(current_user=current_user)
+    return await controller.list_videos(list_videos_in=list_videos_in, current_user=current_user)
