@@ -15,6 +15,7 @@ class MongoVideoRepository(IVideoRepository):
             if not model:
                 raise ValueError(f"Video com ID {video.id} não encontrado para atualização.")
 
+            model.detail = video.detail
             model.status = video.status
             model.updated_at = video.updated_at
 

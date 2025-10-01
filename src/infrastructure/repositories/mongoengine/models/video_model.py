@@ -15,6 +15,7 @@ class VideoModel(BaseModel):
     client_identification = StringField(required=True)
     status = StringField(required=True, choices=VideoStatusEnum.method_list())
     email = StringField(required=False)
+    detail = StringField(required=False)
 
     @classmethod
     def from_entity(cls, video: Video) -> "VideoModel":
@@ -26,6 +27,7 @@ class VideoModel(BaseModel):
             email=video.email,
             file_name=video.file_name,
             file_type=video.file_type,
+            detail=video.detail,
             created_at=video.created_at,
             updated_at=video.updated_at,
             inactivated_at=video.inactivated_at
@@ -53,6 +55,7 @@ class VideoModel(BaseModel):
             email=self.email,
             file_name=self.file_name,
             file_type=self.file_type,
+            detail=self.detail,
             created_at=self.created_at,
             updated_at=self.updated_at,
             inactivated_at=self.inactivated_at

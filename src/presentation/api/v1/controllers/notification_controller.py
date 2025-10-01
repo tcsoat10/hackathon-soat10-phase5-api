@@ -36,6 +36,7 @@ class NotificationController:
         ):
             video.status = mapped_status
         
+        video.detail = notification_dto.detail
         video.updated_at = notification_dto.timestamp
         video = self._video_repository.save(video)
 
@@ -78,6 +79,8 @@ class NotificationController:
                 "PROCESSING": VideoStatusEnum.PROCESSING_FRAMES.status,
                 "COMPLETED": VideoStatusEnum.PENDING_ZIP.status,
                 "ERROR": VideoStatusEnum.ERROR.status,
+                "REJECTED": VideoStatusEnum.REJECTED.status,
+                "N/A": "N/A",
             },
             "zip_service": {
                 "PENDING": VideoStatusEnum.PENDING_ZIP.status,
@@ -85,6 +88,7 @@ class NotificationController:
                 "PROCESSING": VideoStatusEnum.PROCESSING_ZIP.status,
                 "COMPLETED": VideoStatusEnum.COMPLETED.status,
                 "ERROR": VideoStatusEnum.ERROR.status,
+                "N/A": "N/A",
             }
         }
         

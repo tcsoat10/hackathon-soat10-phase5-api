@@ -9,6 +9,7 @@ class VideoStatusEnum(Enum):
     PROCESSING_ZIP = (5, "Processing ZIP", "ZIP creation in progress")
     COMPLETED = (6, "Completed", "Processing completed")
     ERROR = (7, "Error", "An error occurred during processing")
+    REJECTED = (8, "Rejected", "Video rejected due to content policy violations")
 
     @property
     def order(self):

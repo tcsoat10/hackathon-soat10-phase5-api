@@ -11,6 +11,7 @@ class VideoDTO(BaseModel):
     status: str
     created_at: datetime
     updated_at: datetime
+    detail: Optional[str] = None
     filename: Optional[str] = None
     filetype: Optional[str] = None
 
@@ -23,6 +24,7 @@ class VideoDTO(BaseModel):
             status=entity.status,
             filename=entity.file_name,
             filetype=entity.file_type,
+            detail=entity.detail,
             created_at=entity.created_at,
             updated_at=entity.updated_at,
         )

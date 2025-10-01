@@ -14,6 +14,7 @@ class Video(BaseEntity):
         job_ref: Optional[str] = None,
         status: Optional[str] = None,
         email: Optional[str] = None,
+        detail: Optional[str] = None,
         created_at: Optional[datetime] = None,
         updated_at: Optional[datetime] = None,
         inactivated_at: Optional[datetime] = None,
@@ -31,5 +32,6 @@ class Video(BaseEntity):
         self.email = email
         self.file_name = file_name
         self.file_type = file_type
+        self.detail = detail
 
 __all__ = ["Video"]
